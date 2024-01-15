@@ -11,14 +11,15 @@ import {
 	TextInput,
 	Dimensions,
 } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 import DropDownPicker from 'react-native-dropdown-picker';
+
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
 
 import { getAuth } from 'firebase/auth';
 import { ref, onValue } from 'firebase/database';
 import db from '../config';
-
-import * as SplashScreen from 'expo-splash-screen';
-import * as Font from 'expo-font';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,7 +34,6 @@ export default class CreateStory extends Component {
 			fontsLoaded: false,
 			previewImage: 'image_1',
 			dropdownHeight: 40,
-			light_theme: true,
 		};
 	}
 
@@ -78,12 +78,7 @@ export default class CreateStory extends Component {
 						<View style={styles.appIcon}>
 							<Image
 								source={require('../assets/logo.png')}
-								style={{
-									width: 60,
-									height: 60,
-									resizeMode: 'contain',
-									marginLeft: 10,
-								}}></Image>
+								style={styles.iconImage}></Image>
 						</View>
 						<View style={styles.appTitleTextContainer}>
 							<Text
@@ -94,108 +89,79 @@ export default class CreateStory extends Component {
 							</Text>
 						</View>
 					</View>
-					<ScrollView style={styles.fieldsContainer}>
-						<View style={styles.imageContainer}>
-							<View style={styles.previewContainer}>
-								<Image
-									source={preview_images[this.state.previewImage]}
-									style={{
-										resizeMode: 'contain',
-										width: Dimensions.get('window').width - 40,
-										height: 250,
-										borderRadius: 10,
-										marginBottom: 10,
-									}}></Image>
-							</View>
-							<View style={styles.chooseImage}>
-								<DropDownPicker
-									items={[
-										{ label: 'Image 1', value: 'image_1' },
-										{ label: 'Image 2', value: 'image_2' },
-										{ label: 'Image 3', value: 'image_3' },
-										{ label: 'Image 4', value: 'image_4' },
-										{ label: 'Image 5', value: 'image_5' },
-									]}
-									defaultValue={this.state.previewImage}
-									containerStyle={{ height: 40, borderRadius: 20, marginBottom: 10 }}
-									style={{ backgroundColor: 'transparent' }}
-									itemStyle={{
-										justifyContent: 'flex-start',
-									}}
-									dropDownStyle={{
-										backgroundColor: this.state.light_theme ? '#eee' : '#2f345d',
-									}}
-									labelStyle={
-										this.state.light_theme
-											? styles.dropdownLabelLight
-											: styles.dropdownLabel
-									}
-									arrowStyle={
-										this.state.light_theme
-											? styles.dropdownLabelLight
-											: styles.dropdownLabel
-									}
-									onChangeItem={(item) =>
-										this.setState({
-											previewImage: item.value,
-										})
-									}
-								/>
-							</View>
-						</View>
-						<View style={styles.fieldContainer}>
-							<TextInput
-								style={
-									this.state.light_theme ? styles.inputFontLight : styles.inputFont
+					<View style={styles.fieldsContainer}>
+						<Image
+							source={preview_images[this.state.previewImage]}
+							style={styles.previewImage}></Image>
+						<View style={{ height: RFValue(this.state.dropdownHeight) }}>
+							<DropDownPicker
+								items={[
+									{ label: 'Image 1', value: 'image_1' },
+									{ label: 'Image 2', value: 'image_2' },
+									{ label: 'Image 3', value: 'image_3' },
+									{ label: 'Image 4', value: 'image_4' },
+									{ label: 'Image 5', value: 'image_5' },
+								]}
+								defaultValue={this.state.previewImage}
+								open={this.state.dropdownHeight == 170 ? true : false}
+								onOpen={() => {
+									this.setState({ dropdownHeight: 170 });
+								}}
+								onClose={() => {
+									this.setState({ dropdownHeight: 40 });
+								}}
+								style={{
+									backgroundColor: 'transparent',
+									borderWidth: 1,
+									borderColor: 'white',
+								}}
+								textStyle={{
+									color: this.state.dropdownHeight == 170 ? 'black' : 'white',
+									fontFamily: 'Bubblegum-Sans',
+								}}
+								onSelectItem={(item) =>
+									this.setState({
+										previewImage: item.value,
+									})
 								}
-								onChangeText={(title) => this.setState({ title })}
-								placeholder={'Title'}
-								placeholderTextColor={this.state.light_theme ? 'black' : 'white'}
 							/>
 						</View>
-						<View style={styles.fieldContainer}>
+						<ScrollView>
 							<TextInput
-								style={[
-									this.state.light_theme ? styles.inputFontLight : styles.inputFont,
-									styles.inputFontExtra,
-									styles.inputTextBig,
-								]}
+								style={styles.inputFont}
+								onChangeText={(title) => this.setState({ title })}
+								placeholder={'Title'}
+								placeholderTextColor='white'
+							/>
+
+							<TextInput
+								style={[styles.inputFont, styles.inputFontExtra, styles.inputTextBig]}
 								onChangeText={(description) => this.setState({ description })}
 								placeholder={'Description'}
 								multiline={true}
 								numberOfLines={4}
-								placeholderTextColor={this.state.light_theme ? 'black' : 'white'}
+								placeholderTextColor='white'
 							/>
-						</View>
-						<View style={styles.fieldContainer}>
 							<TextInput
-								style={[
-									this.state.light_theme ? styles.inputFontLight : styles.inputFont,
-									styles.inputFontExtra,
-									styles.inputTextBig,
-								]}
+								style={[styles.inputFont, styles.inputFontExtra, styles.inputTextBig]}
 								onChangeText={(story) => this.setState({ story })}
 								placeholder={'Story'}
 								multiline={true}
 								numberOfLines={20}
-								placeholderTextColor={this.state.light_theme ? 'black' : 'white'}
+								placeholderTextColor='white'
 							/>
-						</View>
-						<View style={styles.fieldContainer}>
+
 							<TextInput
-								style={[
-									this.state.light_theme ? styles.inputFontLight : styles.inputFont,
-									styles.inputFontExtra,
-									styles.inputTextBig,
-								]}
+								style={[styles.inputFont, styles.inputFontExtra, styles.inputTextBig]}
 								onChangeText={(moral) => this.setState({ moral })}
 								placeholder={'Moral of the story'}
 								multiline={true}
 								numberOfLines={4}
-								placeholderTextColor={this.state.light_theme ? 'black' : 'white'}
+								placeholderTextColor='white'
 							/>
-						</View>
-					</ScrollView>
+						</ScrollView>
+					</View>
+					<View style={{ flex: 0.08 }} />
 				</View>
 			);
 		}
@@ -207,82 +173,63 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: '#15193c',
 	},
-	containerLight: {
-		flex: 1,
-		backgroundColor: 'white',
-	},
 	droidSafeArea: {
-		marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+		marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : RFValue(35),
 	},
 	appTitle: {
 		flex: 0.07,
 		flexDirection: 'row',
-		flexWrap: 'wrap',
-		padding: 5,
 	},
 	appIcon: {
 		flex: 0.3,
-	},
-	appTitleTextContainer: {
 		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	iconImage: {
+		width: '100%',
+		height: '100%',
+		resizeMode: 'contain',
+	},
+	appTitleTextContainer: {
+		flex: 0.7,
+		justifyContent: 'center',
 	},
 	appTitleText: {
 		color: 'white',
-		fontSize: 28,
+		fontSize: RFValue(28),
 		fontFamily: 'Bubblegum-Sans',
-		paddingLeft: 20,
 	},
 	appTitleTextLight: {
 		color: 'black',
-		fontSize: 28,
+		fontSize: RFValue(28),
 		fontFamily: 'Bubblegum-Sans',
-		paddingLeft: 20,
 	},
 	fieldsContainer: {
 		flex: 0.85,
-		paddingLeft: 20,
-		paddingRight: 20,
-		marginTop: 20,
-		marginBottom: 100,
+	},
+	previewImage: {
+		width: '93%',
+		height: RFValue(250),
+		alignSelf: 'center',
+		borderRadius: RFValue(10),
+		marginVertical: RFValue(10),
+		resizeMode: 'contain',
 	},
 	inputFont: {
-		height: 40,
+		height: RFValue(40),
+		marginTop: RFValue(40),
 		borderColor: 'white',
-		borderWidth: 1,
-		borderRadius: 10,
-		paddingLeft: 10,
+		borderWidth: RFValue(1),
+		borderRadius: RFValue(10),
+		paddingLeft: RFValue(10),
 		color: 'white',
-		fontFamily: 'Bubblegum-Sans',
-	},
-	inputFontLight: {
-		height: 40,
-		borderColor: 'black',
-		borderWidth: 1,
-		borderRadius: 10,
-		paddingLeft: 10,
-		color: 'black',
-		fontFamily: 'Bubblegum-Sans',
-	},
-	dropdownLabel: {
-		color: 'white',
-		fontFamily: 'Bubblegum-Sans',
-	},
-	dropdownLabelLight: {
-		color: 'black',
 		fontFamily: 'Bubblegum-Sans',
 	},
 	inputFontExtra: {
-		marginTop: 10,
+		marginTop: RFValue(15),
 	},
 	inputTextBig: {
 		textAlignVertical: 'top',
-		height: undefined,
-		padding: 5,
-	},
-	submitButton: {
-		marginTop: 20,
-		alignItems: 'center',
-		justifyContent: 'center',
+		padding: RFValue(5),
 	},
 });

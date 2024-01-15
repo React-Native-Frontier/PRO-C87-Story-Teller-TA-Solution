@@ -79,7 +79,12 @@ export default class Feed extends Component {
 								style={styles.iconImage}></Image>
 						</View>
 						<View style={styles.appTitleTextContainer}>
-							<Text style={styles.appTitleText}>Storytelling App</Text>
+							<Text
+								style={
+									this.state.light_theme ? styles.appTitleTextLight : styles.appTitleText
+								}>
+								Storytelling App
+							</Text>
 						</View>
 					</View>
 					<View style={styles.cardContainer}>

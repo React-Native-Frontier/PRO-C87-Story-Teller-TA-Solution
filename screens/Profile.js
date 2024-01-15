@@ -10,6 +10,7 @@ import {
 	Switch,
 } from 'react-native';
 import * as Font from 'expo-font';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 import { getAuth } from 'firebase/auth';
 import { ref, update, onValue } from 'firebase/database';
@@ -154,76 +155,72 @@ const styles = StyleSheet.create({
 	appTitle: {
 		flex: 0.07,
 		flexDirection: 'row',
-		flexWrap: 'wrap',
-		padding: 5,
 	},
 	appIcon: {
 		flex: 0.3,
-	},
-	appTitleTextContainer: {
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+	iconImage: {
+		width: '100%',
+		height: '100%',
+		resizeMode: 'contain',
+	},
+	appTitleTextContainer: {
+		flex: 0.7,
+		justifyContent: 'center',
+	},
 	appTitleText: {
 		color: 'white',
-		fontSize: 28,
+		fontSize: RFValue(28),
 		fontFamily: 'Bubblegum-Sans',
-		paddingLeft: 20,
 	},
 	appTitleTextLight: {
 		color: 'black',
-		fontSize: 28,
+		fontSize: RFValue(28),
 		fontFamily: 'Bubblegum-Sans',
-		paddingLeft: 20,
 	},
 	screenContainer: {
 		flex: 0.85,
 	},
 	profileImageContainer: {
-		flex: 0.3,
-		marginTop: 50,
+		flex: 0.5,
+		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	profileImage: {
-		width: 150,
-		height: 150,
-		borderRadius: 150 / 2,
-	},
-	nameContainer: {
-		flex: 0.1,
-		alignItems: 'center',
+		width: RFValue(140),
+		height: RFValue(140),
+		borderRadius: RFValue(70),
 	},
 	nameText: {
 		color: 'white',
-		fontSize: 40,
+		fontSize: RFValue(40),
 		fontFamily: 'Bubblegum-Sans',
+		marginTop: RFValue(10),
 	},
 	nameTextLight: {
 		color: 'black',
-		fontSize: 40,
+		fontSize: RFValue(40),
 		fontFamily: 'Bubblegum-Sans',
+		marginTop: RFValue(10),
 	},
 	themeContainer: {
+		flex: 0.2,
 		flexDirection: 'row',
 		justifyContent: 'center',
-		paddingTop: 80,
-	},
-	themeTextContainer: {
-		alignItems: 'center',
-		flex: 0.5,
+		marginTop: RFValue(20),
 	},
 	themeText: {
 		color: 'white',
-		fontSize: 30,
+		fontSize: RFValue(30),
 		fontFamily: 'Bubblegum-Sans',
+		marginRight: RFValue(15),
 	},
 	themeTextLight: {
 		color: 'black',
-		fontSize: 30,
+		fontSize: RFValue(30),
 		fontFamily: 'Bubblegum-Sans',
-	},
-	switchContainer: {
-		justifyContent: 'center',
-		alignItems: 'center',
+		marginRight: RFValue(15),
 	},
 });
