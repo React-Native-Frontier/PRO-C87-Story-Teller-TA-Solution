@@ -31,6 +31,7 @@ export default class StoryScreen extends Component {
 			fontsLoaded: false,
 			speakerColor: 'gray',
 			speakerIcon: 'volume-high-outline',
+			light_theme: false,
 		};
 	}
 
@@ -41,6 +42,20 @@ export default class StoryScreen extends Component {
 
 	componentDidMount() {
 		this._loadFontsAsync();
+		this.fetchUser();
+	}
+
+	async fetchUser() {
+		let theme;
+		const auth = getAuth();
+		const userId = auth.currentUser.uid;
+
+		onValue(ref(db, '/users/' + userId), (snapshot) => {
+			theme = snapshot.val().current_theme;
+			this.setState({
+				light_theme: theme === 'light' ? true : false,
+			});
+		});
 	}
 
 	async initiateTTS(title, author, story, moral) {
@@ -64,7 +79,8 @@ export default class StoryScreen extends Component {
 		} else if (this.state.fontsLoaded) {
 			SplashScreen.hideAsync();
 			return (
-				<View style={styles.container}>
+				<View
+					style={this.state.light_theme ? styles.containerLight : styles.container}>
 					<SafeAreaView style={styles.droidSafeArea} />
 					<View style={styles.appTitle}>
 						<View style={styles.appIcon}>
@@ -73,7 +89,12 @@ export default class StoryScreen extends Component {
 								style={styles.iconImage}></Image>
 						</View>
 						<View style={styles.appTitleTextContainer}>
-							<Text style={styles.appTitleText}>Storytelling App</Text>
+							<Text
+								style={
+									this.state.light_theme ? styles.appTitleTextLight : styles.appTitleText
+								}>
+								Storytelling App
+							</Text>
 						</View>
 					</View>
 					<View style={styles.storyContainer}>
@@ -140,6 +161,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: '#15193c',
 	},
+	containerLight: {
+		flex: 1,
+		backgroundColor: 'white',
+	},
 	droidSafeArea: {
 		marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : RFValue(35),
 	},
@@ -163,6 +188,11 @@ const styles = StyleSheet.create({
 	},
 	appTitleText: {
 		color: 'white',
+		fontSize: RFValue(28),
+		fontFamily: 'Bubblegum-Sans',
+	},
+	appTitleTextLight: {
+		color: 'black',
 		fontSize: RFValue(28),
 		fontFamily: 'Bubblegum-Sans',
 	},

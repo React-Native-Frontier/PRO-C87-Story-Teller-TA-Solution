@@ -34,6 +34,7 @@ export default class CreateStory extends Component {
 			fontsLoaded: false,
 			previewImage: 'image_1',
 			dropdownHeight: 40,
+			light_theme: false,
 		};
 	}
 
@@ -113,10 +114,11 @@ export default class CreateStory extends Component {
 								style={{
 									backgroundColor: 'transparent',
 									borderWidth: 1,
-									borderColor: 'white',
+									borderColor: this.state.light_theme ? 'black' : 'white',
+									color: 'red',
 								}}
 								textStyle={{
-									color: this.state.dropdownHeight == 170 ? 'black' : 'white',
+									color: this.state.light_theme ? 'black' : 'white',
 									fontFamily: 'Bubblegum-Sans',
 								}}
 								onSelectItem={(item) =>
@@ -128,14 +130,20 @@ export default class CreateStory extends Component {
 						</View>
 						<ScrollView>
 							<TextInput
-								style={styles.inputFont}
+								style={
+									this.state.light_theme ? styles.inputFontLightText : styles.inputFont
+								}
 								onChangeText={(title) => this.setState({ title })}
 								placeholder={'Title'}
 								placeholderTextColor='white'
 							/>
 
 							<TextInput
-								style={[styles.inputFont, styles.inputFontExtra, styles.inputTextBig]}
+								style={[
+									this.state.light_theme ? styles.inputFontLightText : styles.inputFont,
+									styles.inputFontExtra,
+									styles.inputTextBig,
+								]}
 								onChangeText={(description) => this.setState({ description })}
 								placeholder={'Description'}
 								multiline={true}
@@ -143,7 +151,11 @@ export default class CreateStory extends Component {
 								placeholderTextColor='white'
 							/>
 							<TextInput
-								style={[styles.inputFont, styles.inputFontExtra, styles.inputTextBig]}
+								style={[
+									this.state.light_theme ? styles.inputFontLightText : styles.inputFont,
+									styles.inputFontExtra,
+									styles.inputTextBig,
+								]}
 								onChangeText={(story) => this.setState({ story })}
 								placeholder={'Story'}
 								multiline={true}
@@ -152,7 +164,11 @@ export default class CreateStory extends Component {
 							/>
 
 							<TextInput
-								style={[styles.inputFont, styles.inputFontExtra, styles.inputTextBig]}
+								style={[
+									this.state.light_theme ? styles.inputFontLightText : styles.inputFont,
+									styles.inputFontExtra,
+									styles.inputTextBig,
+								]}
 								onChangeText={(moral) => this.setState({ moral })}
 								placeholder={'Moral of the story'}
 								multiline={true}
@@ -172,6 +188,10 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#15193c',
+	},
+	containerLight: {
+		flex: 1,
+		backgroundColor: 'white',
 	},
 	droidSafeArea: {
 		marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : RFValue(35),
@@ -223,6 +243,15 @@ const styles = StyleSheet.create({
 		borderRadius: RFValue(10),
 		paddingLeft: RFValue(10),
 		color: 'white',
+		fontFamily: 'Bubblegum-Sans',
+	},
+	inputFontLightText: {
+		height: RFValue(40),
+		borderWidth: RFValue(1),
+		borderRadius: RFValue(10),
+		paddingLeft: RFValue(10),
+		color: 'black',
+		borderColor: 'black',
 		fontFamily: 'Bubblegum-Sans',
 	},
 	inputFontExtra: {
